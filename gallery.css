@@ -158,6 +158,28 @@ nav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--sun);
 .palette-bars button:is(:hover, :focus-visible)::after { height: 12px; opacity: 1; }
 .header-rule { flex: 1; height: 1px; background: var(--rule); }
 
+html[data-layout="mobile"] .site-header { padding: 24px 20px 0; }
+html[data-layout="mobile"] .window-light {
+  height: 150vh;
+  mask-image: radial-gradient(ellipse 75% 50% at 78% 8%, black 15%, transparent 72%);
+}
+html[data-layout="mobile"] .header-row { flex-direction: column; align-items: flex-start; gap: 16px; }
+html[data-layout="mobile"] nav { gap: 23px; }
+html[data-layout="mobile"] nav a { font-size: .8rem; }
+html[data-layout="mobile"] .palette-slot,
+html[data-layout="mobile"] .palette { height: auto; min-height: 14px; }
+html[data-layout="mobile"] .palette { flex-direction: column; align-items: stretch; gap: 4px; }
+
+@media (max-width: 859px) {
+  html:not([data-layout]) .site-header { padding: 24px 20px 0; }
+  html:not([data-layout]) .header-row { flex-direction: column; align-items: flex-start; gap: 16px; }
+  html:not([data-layout]) nav { gap: 23px; }
+  html:not([data-layout]) nav a { font-size: .8rem; }
+  html:not([data-layout]) .palette-slot,
+  html:not([data-layout]) .palette { height: auto; min-height: 14px; }
+  html:not([data-layout]) .palette { flex-direction: column; align-items: stretch; gap: 4px; }
+}
+
 .gallery { min-height: 80vh; padding: 48px 36px 100px; }
 .gallery:has(.gallery-rows) { max-width: 620px; padding: 40px 20px 100px; }
 .gallery-columns {
@@ -314,20 +336,13 @@ nav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--sun);
   font: 1.2rem/1 system-ui;
 }
 
-@media (max-width: 859px) {
-  .about, .contact { padding: 48px 20px 86px; }
-  .contact { grid-template-columns: minmax(0, 1fr); }
-  .lightbox { padding: 62px 20px 30px; }
-  .lightbox-arrow { top: 16px; transform: none; }
-  .next-artwork { right: auto; left: 62px; }
-}
+html[data-layout="mobile"] .about,
+html[data-layout="mobile"] .contact { padding: 48px 20px 86px; }
+html[data-layout="mobile"] .contact { grid-template-columns: minmax(0, 1fr); }
+html[data-layout="mobile"] .lightbox { padding: 62px 20px 30px; }
+html[data-layout="mobile"] .lightbox-arrow { top: 16px; transform: none; }
+html[data-layout="mobile"] .next-artwork { right: auto; left: 62px; }
 @media (max-width: 560px) {
-  .site-header { padding: 24px 20px 0; }
-  .header-row { gap: 16px; }
-  nav { gap: 23px; }
-  nav a { font-size: .8rem; }
-  .palette-slot, .palette { height: auto; min-height: 14px; }
-  .palette { flex-direction: column; align-items: stretch; gap: 4px; }
   .site-footer { padding-inline: 20px; }
   .footer-row { gap: 10px; font-size: .76rem; }
   .footer-row .wordmark { gap: 6px; font-size: .78rem; }

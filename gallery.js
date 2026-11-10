@@ -1,5 +1,6 @@
 import { Component as GalleryLayout } from "./gallery-layout.js";
 import { contactEndpoint } from "./contact-config.js";
+import { manualPlacements, manualOrder } from "./layout-adjustments.js";
 
 const get = (id) => document.getElementById(id);
 const engine = new GalleryLayout();
@@ -11,10 +12,12 @@ const modalImage = get("artwork-image");
 const contactArt = get("contact-art");
 const status = get("gallery-status");
 let currentPage;
+let currentWidth;
 let currentMode;
 let openArtwork;
 let artworkOrder = [];
-let layouts;
+let galleryArtworks;
+let fiveColumnReference;
 let contactPool = [];
 
 function imagePath(art) {
@@ -58,43 +61,39 @@ function desktopGallery(columns) {
   return container;
 }
 
-function mobileGallery({ solos, duos, trinities }) {
+function mobileGallery({ rows }) {
   const container = document.createElement("div");
   container.className = "gallery-rows";
-  const addRow = (artworks, kind, gap) => {
+  for (const { items, kind, slots, gap } of rows) {
     const row = document.createElement("div");
     row.className = "gallery-row";
-    row.style.setProperty("--count", artworks.length);
+    row.style.setProperty("--count", slots);
     row.style.setProperty("--gap", gap);
     const eager = container.childElementCount < 2;
-    row.append(...artworks.map((art) => card(art, kind, eager)));
+    row.append(...items.map((art) => card(art, kind, eager)));
     container.append(row);
-  };
-  const rowCount = Math.max(solos.length, duos.length, trinities.length);
-  for (let i = 0; i < rowCount; i += 1) {
-    if (solos[i]) addRow([solos[i]], "solo", "0");
-    if (duos[i]) addRow(duos[i], "duo", "18px");
-    if (trinities[i]) addRow(trinities[i], "trio", "21px");
-  }
-
-  // The original mobile engine only assigns known miniatures to curated groups.
-  // Keep those groups intact and display any newly selected works it did not assign.
-  const assigned = new Set([...solos, ...duos.flat(), ...trinities.flat()].map((art) => art.id));
-  const remaining = artworkOrder.filter((art) => !assigned.has(art.id));
-  for (let i = 0; i < remaining.length; i += 2) {
-    addRow(remaining.slice(i, i + 2), "duo", "18px");
   }
   return container;
 }
 
 function renderGallery() {
-  if (!layouts) return;
   const width = document.documentElement.clientWidth;
-  const mode = width >= 1400 ? "wide" : width >= 860 ? "medium" : "mobile";
-  if (currentMode === mode) return;
+  const mode = width >= 1080 ? "wide" : width >= 860 ? "medium" : "mobile";
+  document.documentElement.dataset.layout = mode;
+  if (!galleryArtworks) return;
+  if (currentWidth === width) return;
+  if (currentMode === mode) {
+    currentWidth = width;
+    return;
+  }
+  currentWidth = width;
   currentMode = mode;
   const previousFocus = document.activeElement.dataset.artwork;
-  layoutRoot.replaceChildren(mode === "mobile" ? mobileGallery(layouts.mobile) : desktopGallery(layouts[mode]));
+  const fiveColumns = fiveColumnReference;
+  const layout = mode === "wide" ? fiveColumns
+    : mode === "medium" ? engine.applyManualPlacements(engine.compute3ColumnLayout(galleryArtworks, 1100, fiveColumns), [], manualOrder)
+      : engine.computeMobileLayout(galleryArtworks, fiveColumns, manualOrder);
+  layoutRoot.replaceChildren(mode === "mobile" ? mobileGallery(layout) : desktopGallery(layout));
   if (previousFocus) {
     layoutRoot.querySelector(`[data-artwork="${previousFocus}"]`)?.focus({ preventScroll: true });
   }
@@ -239,7 +238,6 @@ function setupContact() {
   const success = get("contact-success");
   form.action = endpoint;
   form.querySelector("fieldset").disabled = false;
-  get("contact-fallback").hidden = true;
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -270,18 +268,15 @@ async function loadGallery() {
     const response = await fetch("./artworks.json");
     if (!response.ok) throw new Error("Catalogue could not be loaded");
     const records = await response.json();
-    const years = new Map(records.map((art) => [art.id, art.year]));
     const arts = engine.resolveArtworkData(records.map((art) => ({
       ...art,
       displayTitle: art.title,
-      title: art.layoutTitle,
-    }))).map((art) => ({ ...art, year: years.get(art.id) }));
+    })));
     artworkOrder = [...arts].sort((a, b) => engine.compareChronoDesc(a, b));
-    layouts = {
-      wide: engine.compute5ColumnLayout(arts),
-      medium: engine.compute3ColumnLayout(arts),
-      mobile: engine.computeMobileLayout(arts),
-    };
+    galleryArtworks = arts;
+    const automatic = engine.compute5ColumnLayout(arts, 1600);
+    const adjusted = engine.applyManualPlacements(automatic, manualPlacements, manualOrder);
+    fiveColumnReference = engine.balanceFiveColumnLayout(adjusted, manualPlacements, manualOrder);
     contactPool = artworkOrder.filter((art) => art.inchWidth === art.inchHeight && art.inchWidth >= 20);
     renderPalette();
     renderGallery();
@@ -298,4 +293,5 @@ window.addEventListener("resize", renderGallery);
 new ResizeObserver(renderGallery).observe(document.documentElement);
 showPage();
 setupContact();
+renderGallery();
 loadGallery();
