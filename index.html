@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Yup Art, the portfolio of Florida artist Yuliya Popkova.">
+  <title>Yup Art | Yuliya Popkova</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="fonts/josefin-sans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="gallery.css">
+  <script type="module" src="gallery.js"></script>
+</head>
+<body>
+  <div class="site">
+    <div class="window-light" aria-hidden="true"></div>
+    <div class="top-stripe" aria-hidden="true"></div>
+    <header class="site-header">
+      <div class="header-row">
+        <a class="brand" href="#gallery" aria-label="Yup Art gallery">
+          <span class="wordmark"><span>Yup</span><span class="dot" aria-hidden="true"></span><span>Art</span></span>
+          <span class="wave" aria-hidden="true"></span>
+        </a>
+        <nav aria-label="Main navigation">
+          <a href="#gallery" aria-current="page">Gallery</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+      <div class="palette-slot">
+        <div class="palette" id="palette">
+          <span>Color memory · one stripe per painting</span>
+          <div class="palette-bars" id="palette-bars" aria-label="Paintings by color"></div>
+        </div>
+        <div class="header-rule" id="header-rule" hidden></div>
+      </div>
+    </header>
+
+    <main class="gallery" id="gallery">
+      <h1 class="sr-only">Gallery</h1>
+      <p id="gallery-status" role="status">Loading the gallery…</p>
+      <noscript><p>Enable JavaScript to explore the gallery.</p></noscript>
+      <div id="gallery-layout"></div>
+    </main>
+
+    <main class="about" id="about" hidden>
+      <section class="statement">
+        <h1 class="eyebrow">About the work</h1>
+        <p>A painting can return us to the way the world once felt. Memory transforms a moment. Light grows brighter, colors deepen, perspective shifts, and certain details take on greater meaning. These memories live, breathe, and vibrate within us. Through texture, light, and color, painting brings them before our eyes again, fresh and alive, even when the moments belong to a past we never experienced ourselves.</p>
+      </section>
+      <section class="artist">
+        <div class="portrait mount">
+          <img src="images/portrait.jpg" alt="Yuliya Popkova" loading="lazy">
+        </div>
+        <div class="artist-copy">
+          <h2 class="eyebrow">The artist</h2>
+          <p class="artist-name">Yuliya Popkova</p>
+          <div class="biography">
+            <p>Yuliya Popkova is a Florida-based oil painter whose work is filled with color, atmosphere, and emotional depth.</p>
+            <p>Yuliya is an active member of the Central Brevard Art Association and regularly exhibits her work in local shows and group exhibitions. She continues to refine her craft through advanced study, workshops, and a deep personal interest in color theory and composition. Her artistic style evolves as she explores new techniques and creative directions.</p>
+          </div>
+          <p class="location">Cape Canaveral, Florida</p>
+        </div>
+      </section>
+    </main>
+
+    <main class="contact" id="contact" hidden>
+      <div class="contact-aside">
+        <button type="button" class="contact-art mount" id="contact-art" hidden>
+          <img alt="">
+        </button>
+        <div class="contact-social">
+          <a class="instagram" href="https://www.instagram.com/yup_art/" target="_blank" rel="noopener">
+            <span class="instagram-icon" aria-hidden="true"></span><span>@yup_art</span>
+          </a>
+          <p class="eyebrow">Cape Canaveral, Florida</p>
+        </div>
+      </div>
+      <div class="contact-copy">
+        <h1>Leave a message</h1>
+        <p>For questions about a painting, exhibitions, or simply to say hello.</p>
+        <p id="contact-fallback">For now, send a message to <a href="https://www.instagram.com/yup_art/" target="_blank" rel="noopener">@yup_art on Instagram</a>.</p>
+        <form id="contact-form" method="post">
+          <fieldset disabled>
+            <label><span class="eyebrow">Name</span><input required type="text" name="name" autocomplete="name"></label>
+            <label><span class="eyebrow">Email</span><input required type="email" name="email" autocomplete="email"></label>
+            <label><span class="eyebrow">Message</span><textarea required name="message" rows="4"></textarea></label>
+            <div hidden><label>Leave this blank<input name="_gotcha" tabindex="-1" autocomplete="off"></label></div>
+            <button type="submit">Send message →</button>
+            <p id="form-error" role="alert" hidden>We couldn’t send your message. Please try again.</p>
+          </fieldset>
+        </form>
+        <div class="contact-success" id="contact-success" role="status" tabindex="-1" hidden>
+          <p>Thank you.</p>
+          <p>Your message has been sent.</p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-row">
+        <span>© 2026 Yuliya Popkova</span>
+        <div class="wordmark" aria-hidden="true"><span>Yup</span><span class="dot"></span><span>Art</span></div>
+        <a href="https://basanity.com" target="_blank" rel="noopener">Made by basanity.com</a>
+      </div>
+    </footer>
+  </div>
+
+  <dialog id="artwork-dialog" class="lightbox" aria-labelledby="artwork-title">
+    <div class="lightbox-inner">
+      <div class="lightbox-mount"><img id="artwork-image" alt=""></div>
+      <div class="artwork-label">
+        <h2 id="artwork-title" aria-live="polite"></h2>
+        <p id="artwork-meta"><span id="artwork-details"></span> <span id="artwork-size" hidden></span></p>
+      </div>
+    </div>
+    <button class="lightbox-arrow previous-artwork" type="button" aria-label="Previous artwork">‹</button>
+    <button class="lightbox-arrow next-artwork" type="button" aria-label="Next artwork">›</button>
+    <button class="close-lightbox" type="button" aria-label="Close artwork" autofocus>×</button>
+  </dialog>
+</body>
+</html>
