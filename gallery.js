@@ -1,5 +1,4 @@
 import { Component as GalleryLayout } from "./gallery-layout.js";
-import { contactEndpoint } from "./contact-config.js";
 import { manualPlacements, manualOrder } from "./layout-adjustments.js";
 
 const get = (id) => document.getElementById(id);
@@ -229,40 +228,6 @@ function showPage() {
   window.scrollTo(0, 0);
 }
 
-function setupContact() {
-  const endpoint = contactEndpoint.trim();
-  if (!endpoint) return;
-  const form = get("contact-form");
-  const submit = form.querySelector('button[type="submit"]');
-  const error = get("form-error");
-  const success = get("contact-success");
-  form.action = endpoint;
-  form.querySelector("fieldset").disabled = false;
-
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    if (submit.disabled) return;
-    submit.disabled = true;
-    error.hidden = true;
-    try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: { Accept: "application/json" },
-        body: new FormData(form),
-      });
-      if (!response.ok) throw new Error("Contact submission failed");
-      form.reset();
-      form.hidden = true;
-      success.hidden = false;
-      success.focus();
-    } catch {
-      error.hidden = false;
-    } finally {
-      submit.disabled = false;
-    }
-  });
-}
-
 async function loadGallery() {
   try {
     const response = await fetch("./artworks.json");
@@ -292,6 +257,5 @@ window.addEventListener("hashchange", showPage);
 window.addEventListener("resize", renderGallery);
 new ResizeObserver(renderGallery).observe(document.documentElement);
 showPage();
-setupContact();
 renderGallery();
 loadGallery();

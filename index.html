@@ -9,6 +9,8 @@
   <link rel="preload" href="fonts/josefin-sans.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="gallery.css">
   <script type="module" src="gallery.js"></script>
+  <script type="module" src="contact-form.js"></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
   <div class="site">
@@ -79,13 +81,14 @@
         <h1>Leave a message</h1>
         <p>For questions about a painting, exhibitions, or simply to say hello.</p>
         <form id="contact-form" method="post">
-          <fieldset disabled>
-            <label><span class="eyebrow">Name</span><input required type="text" name="name" autocomplete="name"></label>
-            <label><span class="eyebrow">Email</span><input required type="email" name="email" autocomplete="email"></label>
-            <label><span class="eyebrow">Message</span><textarea required name="message" rows="4"></textarea></label>
-            <div hidden><label>Leave this blank<input name="_gotcha" tabindex="-1" autocomplete="off"></label></div>
+          <fieldset>
+            <label><span class="eyebrow">Name</span><input required type="text" name="name" autocomplete="name" maxlength="100"></label>
+            <label><span class="eyebrow">Email</span><input required type="email" name="email" autocomplete="email" maxlength="200"></label>
+            <label><span class="eyebrow">Message</span><textarea required name="message" rows="4" maxlength="5000"></textarea></label>
+            <div hidden><label>Leave this blank<input name="website" tabindex="-1" autocomplete="off"></label></div>
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAGJYCX6gfIQzzKaA"></div>
             <button type="submit">Send message →</button>
-            <p id="form-error" role="alert" hidden>We couldn’t send your message. Please try again.</p>
+            <p id="form-error" role="alert" hidden>Something went wrong. Please try again later.</p>
           </fieldset>
         </form>
         <div class="contact-success" id="contact-success" role="status" tabindex="-1" hidden>
